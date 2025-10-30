@@ -3,6 +3,8 @@ package com.acciojob.student_library_management_system.entities;
 import com.acciojob.student_library_management_system.enums.Category;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table
 public class Book {
@@ -33,6 +35,15 @@ public class Book {
 
     @Column(nullable = false)
     private String rackNo;
+
+
+    @JoinColumn  // adds the PK of Card table as a FK to the Book Table
+    @ManyToOne
+    private Card card;
+
+
+    @OneToMany(mappedBy = "book")
+    private List<Transaction> transactionList;
 
     public int getBookId() {
         return bookId;
@@ -96,5 +107,21 @@ public class Book {
 
     public void setRackNo(String rackNo) {
         this.rackNo = rackNo;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
+    public List<Transaction> getTransactionList() {
+        return transactionList;
+    }
+
+    public void setTransactionList(List<Transaction> transactionList) {
+        this.transactionList = transactionList;
     }
 }

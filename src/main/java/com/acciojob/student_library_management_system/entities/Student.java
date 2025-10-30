@@ -36,6 +36,11 @@ public class Student {
     @Column (nullable=false)
     private String dob;
 
+    // The field that owns the relationship.
+    // This element is only specified on the inverse (non-owning) side of the association.
+    @OneToOne(mappedBy = "student",cascade = CascadeType.ALL)
+    private Card card;
+
 
     public int getStudentId() {
         return studentId;
@@ -107,5 +112,13 @@ public class Student {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

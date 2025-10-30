@@ -28,6 +28,15 @@ public class Transaction {
     @Column(nullable = false)
     private TransactionType transactionType;
 
+    @JoinColumn   // adds the PK bookId of Book as a FK to the Transaction table
+    @ManyToOne
+    private Book book;
+
+    @JoinColumn   // adds the PK cardId of Card as a FK to the Transaction table
+    @ManyToOne
+    private Card card;
+
+
     public int getTransactionId() {
         return transactionId;
     }
@@ -58,5 +67,21 @@ public class Transaction {
 
     public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }
