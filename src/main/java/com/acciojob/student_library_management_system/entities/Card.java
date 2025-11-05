@@ -1,6 +1,7 @@
 package com.acciojob.student_library_management_system.entities;
 
 import com.acciojob.student_library_management_system.enums.CardStatus;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -32,10 +33,13 @@ public class Card {
     @UpdateTimestamp // automatically adds the date and time when a Card is Updated
     private String updatedDate;
 
+    // the reference to this class is already been managed in the Card class
+    @JsonBackReference // it has printed the student data already no need to print again
     @JoinColumn() // joins the primary key of Student "studentId" as a foreign key in the Card table
     @OneToOne() // @OneToOne:- One Card is Assigned to One Student
     // only the studentId will be stored in the Card table not the whole Student object
     private Student student;
+    // In the database the card table will store the studentId as it is the Owning SIde of OneToOne Mapping
 
     @OneToMany(mappedBy = "card")  // cascade operation not possible because if card is deleted then no need to delete books
     private List<Book> bookList;

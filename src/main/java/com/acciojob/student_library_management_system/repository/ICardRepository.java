@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@Repository
+@Repository                                 //Entity,datatype of Primary Key
 public interface ICardRepository extends JpaRepository<Card,Integer> {
 
 }

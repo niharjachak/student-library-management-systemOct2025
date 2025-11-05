@@ -1,5 +1,7 @@
 package com.acciojob.student_library_management_system.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -38,7 +40,12 @@ public class Student {
 
     // The field that owns the relationship.
     // This element is only specified on the inverse (non-owning) side of the association.
-    @OneToOne(mappedBy = "student",cascade = CascadeType.ALL)
+
+    // in the database the student will not store card Id in student table as it is the Inverse side
+    // of the OneToOne mapping
+
+    @JsonManagedReference  //  mappedby= ManagedReference                        // fetch type lazy means card will not be printed
+    @OneToOne(mappedBy = "student",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Card card;
 
 
@@ -120,5 +127,19 @@ public class Student {
 
     public void setCard(Card card) {
         this.card = card;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "studentName='" + studentName + '\'' +
+                ", email='" + email + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", dept='" + dept + '\'' +
+                ", sem='" + sem + '\'' +
+                ", gender='" + gender + '\'' +
+                ", address='" + address + '\'' +
+                ", dob='" + dob + '\'' +
+                '}';
     }
 }
