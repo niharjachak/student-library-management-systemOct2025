@@ -5,21 +5,26 @@ import com.acciojob.student_library_management_system.entities.Student;
 import com.acciojob.student_library_management_system.enums.CardStatus;
 import com.acciojob.student_library_management_system.repository.IStudentRepository;
 import com.acciojob.student_library_management_system.requestdtos.StudentRequestDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
+@Slf4j
 public class StudentService {
 
     @Autowired
     IStudentRepository studentRepository;
 
 
-    public String saveStudent(StudentRequestDto studentdto){
+    public UUID createStudent(StudentRequestDto studentdto){
         Student student = new Student();
 
         student.setStudentName(studentdto.getStudentName());
@@ -35,7 +40,7 @@ public class StudentService {
         Card card = new Card();
         card.setCardStatus(CardStatus.ACTIVE);
         // an expiry-date is set : 3 years after the Current Date
-        card.setExpiryDate(LocalDate.now().plusYears(3).toString());
+        card.setExpiryDate(LocalDate.now().plusYears(3));
         // THE STUDENT IS ASSIGNED WITH THE CARD
         student.setCard(card);
         // THE CARD IS MAPPED TO STUDENT
@@ -43,10 +48,12 @@ public class StudentService {
         // no need to write card repository.save because CascadeType.ALL handles creation and
         //deletion
         studentRepository.save(student);
-        return "Student Saved Successfully !";
+        log.info("Student with Id: "+student.getStudentId()+" registered succesfully!");
+        return student.getCard().getCardId();
     }
 
     public String updateStudentByIdPut(int studentId, StudentRequestDto updatestudentdto) {
+
         Student student = getStudentById(studentId);
 
         if(student!=null){
@@ -105,5 +112,24 @@ public class StudentService {
         return "Student with studentId: "+studentId+" Deleted Successfully !";
     }
 
+    // Pagination - Retrieving records in the form of pages.
+    // This api retrieves a list of Students in the form of pages with a fixed page size
+    // pageNumber : denotes the page Number of the  student records
+    // pageSize:  denotes the number of students in that page.
+    public List<Student> getAllStudentsPageWise(int pageNumber, int pageSize){
+         return studentRepository.findAll(PageRequest.of(pageNumber,pageSize)).getContent();
+
+    }
+
+    //Pagination + Sorting
+
+//    This api is retrieving the student records in pages but is sorting them according to
+//    an attribute we will be passing eg : Name ,dob
+//     We can sort the records  in ascending as well as descending order
+    public List<Student> getAllStudentsSortedPageWise(int pageNumber, int pageSize,String attribute){
+                                                                                                // ascending or descending
+        return studentRepository.findAll(PageRequest.of(pageNumber,pageSize, Sort.by(attribute).ascending())).getContent();
+
+    }
 
 }

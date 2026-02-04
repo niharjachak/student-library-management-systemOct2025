@@ -1,20 +1,28 @@
 package com.acciojob.student_library_management_system.entities;
 
+import com.acciojob.student_library_management_system.enums.Availability;
 import com.acciojob.student_library_management_system.enums.Category;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Book {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column
-    private int bookId;
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    @Column(name="bookId")
+    private UUID bookId;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String bookName;
 
     @Column(nullable = false)
@@ -27,7 +35,8 @@ public class Book {
     private int pages;
 
     @Column(nullable = false)
-    private boolean availability;
+    @Enumerated(value= EnumType.STRING)
+    private Availability availability;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
@@ -38,90 +47,10 @@ public class Book {
 
 
     @JoinColumn  // adds the PK of Card table as a FK to the Book Table
-    @ManyToOne
+    @ManyToOne  // tells us which card is this book borrowed by
     private Card card;
-
 
     @OneToMany(mappedBy = "book")
     private List<Transaction> transactionList;
 
-    public int getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(int bookId) {
-        this.bookId = bookId;
-    }
-
-    public String getBookName() {
-        return bookName;
-    }
-
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
-    }
-
-    public String getBookPublisher() {
-        return bookPublisher;
-    }
-
-    public void setBookPublisher(String bookPublisher) {
-        this.bookPublisher = bookPublisher;
-    }
-
-    public String getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(String publishDate) {
-        this.publishDate = publishDate;
-    }
-
-    public int getPages() {
-        return pages;
-    }
-
-    public void setPages(int pages) {
-        this.pages = pages;
-    }
-
-    public boolean isAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(boolean availability) {
-        this.availability = availability;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public String getRackNo() {
-        return rackNo;
-    }
-
-    public void setRackNo(String rackNo) {
-        this.rackNo = rackNo;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
 }

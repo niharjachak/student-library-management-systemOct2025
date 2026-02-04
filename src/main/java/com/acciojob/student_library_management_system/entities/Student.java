@@ -3,131 +3,50 @@ package com.acciojob.student_library_management_system.entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Entity
 @Table(name = "student")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+
 public class Student {
 
     // Student -> id, name, email, mobile, dept, sem, gender, address, dob…
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int studentId;
-
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID studentId;
     @Column (nullable=false)
     private String studentName;
-
     @Column (nullable=false,unique = true)
     private String email;
-
     @Column (nullable=false,unique=true)
     private String mobile;
-
     @Column (nullable=false)
     private String dept;
-
     @Column (nullable=false)
     private String sem;
-
     @Column (nullable=false)
     private String gender;
-
     @Column (nullable=false)
     private String address;
-
     @Column (nullable=false)
     private String dob;
 
     // The field that owns the relationship.
     // This element is only specified on the inverse (non-owning) side of the association.
-
-    // in the database the student will not store card Id in student table as it is the Inverse side
+    // in the database the student will not store card_Id in student table as it is the Inverse side
     // of the OneToOne mapping
-
-    @JsonManagedReference  //  mappedby= ManagedReference                        // fetch type lazy means card will not be printed
+    @JsonManagedReference  //  mappedby= ManagedReference         // fetch type lazy means card will not be printed
     @OneToOne(mappedBy = "student",cascade = CascadeType.ALL ,fetch = FetchType.LAZY)
     private Card card;
 
-
-    public int getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(int studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getStudentName() {
-        return studentName;
-    }
-
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getDept() {
-        return dept;
-    }
-
-    public void setDept(String dept) {
-        this.dept = dept;
-    }
-
-    public String getSem() {
-        return sem;
-    }
-
-    public void setSem(String sem) {
-        this.sem = sem;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getDob() {
-        return dob;
-    }
-
-    public void setDob(String dob) {
-        this.dob = dob;
-    }
-
-    public Card getCard() {
-        return card;
-    }
-
-    public void setCard(Card card) {
-        this.card = card;
-    }
 
     @Override
     public String toString() {

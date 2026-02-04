@@ -3,27 +3,35 @@ package com.acciojob.student_library_management_system.entities;
 import com.acciojob.student_library_management_system.enums.CardStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name="card")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Card {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column
-    private int cardId;
+    private UUID cardId;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)  //takes value converts it into string and stores in database
     private CardStatus cardStatus;
 
     @Column(nullable = false)
-    private String expiryDate;
+    private LocalDate expiryDate;
 
     @Column(nullable = false)
     @CreationTimestamp  // auto adds the date and time when a new card is Created
@@ -35,7 +43,7 @@ public class Card {
 
     // the reference to this class is already been managed in the Card class
     @JsonBackReference // it has printed the student data already no need to print again
-    @JoinColumn() // joins the primary key of Student "studentId" as a foreign key in the Card table
+    @JoinColumn( ) // joins the primary key of Student "studentId" as a foreign key in the Card table
     @OneToOne() // @OneToOne:- One Card is Assigned to One Student
     // only the studentId will be stored in the Card table not the whole Student object
     private Student student;
@@ -47,67 +55,4 @@ public class Card {
     @OneToMany(mappedBy = "card")
     private List<Transaction> transactionList;
 
-    public int getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(int cardId) {
-        this.cardId = cardId;
-    }
-
-    public CardStatus getCardStatus() {
-        return cardStatus;
-    }
-
-    public void setCardStatus(CardStatus cardStatus) {
-        this.cardStatus = cardStatus;
-    }
-
-    public String getExpiryDate() {
-        return expiryDate;
-    }
-
-    public void setExpiryDate(String expiryDate) {
-        this.expiryDate = expiryDate;
-    }
-
-    public Date getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getUpdatedDate() {
-        return updatedDate;
-    }
-
-    public void setUpdatedDate(String updatedDate) {
-        this.updatedDate = updatedDate;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
-    }
-
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
 }
