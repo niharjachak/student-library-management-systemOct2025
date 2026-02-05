@@ -6,6 +6,7 @@ import com.acciojob.student_library_management_system.repository.IBookRepository
 import com.acciojob.student_library_management_system.requestdtos.BookRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,6 +59,11 @@ public class BookService {
 
     public List<Book> getAllBooksByAvailability(Availability availability){
         return bookRepository.findByAvailability(availability);
+    }
+
+    public Book getBookByBookName(String bookName){
+        return bookRepository.findByBookName(bookName).
+                orElseThrow(() ->new RuntimeException("Book with Name: "+bookName+ " not found"));
     }
 
 }

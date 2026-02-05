@@ -23,12 +23,12 @@ public class StudentController {
     }
 
     @GetMapping("/getById/{studentId}")
-    public Student getStudentById(@PathVariable int studentId){
+    public Student getStudentById(@PathVariable UUID studentId){
         return studentService.getStudentById(studentId);
     }
 
     @DeleteMapping("/deleteById/{studentId}")
-    public String deleteStudentById(@PathVariable int studentId){
+    public String deleteStudentById(@PathVariable UUID studentId){
         return studentService.deleteStudentById(studentId);
      }
 
@@ -38,12 +38,12 @@ public class StudentController {
     }
 
     @PutMapping("/updatePut/{studentId}")
-    public String updateStudentByPut(@PathVariable int studentId, @RequestBody  StudentRequestDto studentRequestDto){
+    public String updateStudentByPut(@PathVariable UUID studentId, @RequestBody  StudentRequestDto studentRequestDto){
         return studentService.updateStudentByIdPut(studentId,studentRequestDto);
     }
 
     @PatchMapping("/updatePatch/{studentId}")
-    public String updateStudentByPatch(@PathVariable int studentId,@RequestParam String sem,@RequestParam String address){
+    public String updateStudentByPatch(@PathVariable UUID studentId,@RequestParam String sem,@RequestParam String address){
         return studentService.updateStudentByIdPatch(studentId,sem,address);
     }
 

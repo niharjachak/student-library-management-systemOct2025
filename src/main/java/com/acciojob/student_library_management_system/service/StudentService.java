@@ -52,7 +52,8 @@ public class StudentService {
         return student.getCard().getCardId();
     }
 
-    public String updateStudentByIdPut(int studentId, StudentRequestDto updatestudentdto) {
+    public String updateStudentByIdPut(UUID studentId, StudentRequestDto updatestudentdto) {
+
 
         Student student = getStudentById(studentId);
 
@@ -74,7 +75,7 @@ public class StudentService {
 
     }
 
-    public String updateStudentByIdPatch(int studentId,String sem,String address ) {
+    public String updateStudentByIdPatch(UUID studentId,String sem,String address ) {
         Student student = getStudentById(studentId);
 
         if(student!=null){
@@ -89,8 +90,20 @@ public class StudentService {
 
     }
 
+    // THIS METHOD SEARCHES THE STUDENT BY EMAIL ID AND RETURNS THE CORRESPONDING
+    // CARD-ID OF THE STUDENT.
+    // IT IS OPTIONAL SO IF STUDENT FOUND IT WILL RETURN CARDID AND IF NOT FOUND
+    // IT WILL RETURN AN EXCEPTION
+    public UUID getStudentCardIDByEmail(String studEmail){
+        return studentRepository.findByEmail(studEmail)
+                .orElseThrow(()-> new RuntimeException("STUDENT WITH EMAIL: "+studEmail+" NOT FOUND!" ))
+                .getCard()
+                .getCardId();
+    }
 
-    public Student getStudentById(int studentId){
+
+
+    public Student getStudentById(UUID studentId){
         Optional<Student> optionalStudent = studentRepository.findById(studentId);
 
         if(optionalStudent.isPresent()){
@@ -105,7 +118,7 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public String deleteStudentById(int studentId){
+    public String deleteStudentById(UUID studentId){
         // The corresponding card for the Student will automatically delete when a student
         // is deleted
         studentRepository.deleteById(studentId);

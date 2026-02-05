@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository                                     //Entity,datatype of Primary Key
-public interface IBookRepository extends JpaRepository<Book, Integer> {
+public interface IBookRepository extends JpaRepository<Book, UUID> {
+
     Optional<Book> findByBookName(String bookName);
 
     List<Book> findByAvailability(Availability availability);

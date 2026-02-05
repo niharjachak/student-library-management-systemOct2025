@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.UUID;
 
@@ -25,10 +26,10 @@ public class Transaction {
 
     @CreationTimestamp
     @Column(nullable = false)
-    private Date transactionDate;
+    private LocalDate transactionDate;
 
-    @Column(nullable = false)
-    private String dueDate;
+    @Column(nullable = true)
+    private LocalDate dueDate;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)

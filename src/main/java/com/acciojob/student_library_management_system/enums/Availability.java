@@ -4,5 +4,4 @@ public enum Availability {
 
     AVAILABLE,
     ISSUED,
-    UNAVAILABLE
 }
