@@ -6,6 +6,7 @@ import com.acciojob.student_library_management_system.entities.Transaction;
 import com.acciojob.student_library_management_system.enums.Availability;
 import com.acciojob.student_library_management_system.enums.CardStatus;
 import com.acciojob.student_library_management_system.enums.TransactionType;
+import com.acciojob.student_library_management_system.exceptions.*;
 import com.acciojob.student_library_management_system.repository.IBookRepository;
 import com.acciojob.student_library_management_system.repository.ICardRepository;
 import com.acciojob.student_library_management_system.repository.IStudentRepository;
@@ -39,18 +40,18 @@ public class TransactionService {
 
 
     @Transactional
-    public Transaction borrowBook(String bookName, String studEmail){
+    public Transaction borrowBook (String bookName, String studEmail) {
 
         UUID studentCardId= studentService.getStudentCardIDByEmail(studEmail);
         Book book = bookService.getBookByBookName(bookName);
 
         if(book.getAvailability()!= Availability.AVAILABLE){
-            throw new RuntimeException(book.getBookName()+" is Unavailable! Please try Later");
+            throw new BookUnavailableException(book.getBookName()+" is Unavailable! Please try Later");
         }
         //CardStatus check
         Card card = cardRepository.findById(studentCardId).orElseThrow(()-> new RuntimeException("Card Not Found"));
         if(card.getCardStatus()!= CardStatus.ACTIVE){
-            throw new RuntimeException("Card is INACTIVE!");
+            throw new CardInactiveException("Card is INACTIVE!");
         }
 
         //Assign book to Card
@@ -81,17 +82,23 @@ public class TransactionService {
         UUID studentCardId= studentService.getStudentCardIDByEmail(studentEmail);
         Book book = bookService.getBookByBookName(bookName);
 
-        Card card = cardRepository.findById(studentCardId).orElseThrow(()-> new RuntimeException("Card Not Found"));
+        Card card = cardRepository.findById(studentCardId)
+                .orElseThrow(
+                        ()-> new InvalidCardException("INVALID  CARD-ID")
+                );
 
 
         if(book.getAvailability()!=Availability.ISSUED){
-            throw new RuntimeException("BOOK :"+bookName+" IS NOT ISSUED");
+            throw new BookException("BOOK :"+bookName+" IS NOT ISSUED");
+        }
+        if (book.getCard()==null){
+            throw new BookException("THE BOOK IS NOT ISSUED TO ANY CARD-ID");
         }
         // THE  CARD THIS BOOK IS ASSIGNED TO
-        UUID bookCardId= book.getCard().getCardId();
+            UUID bookCardId= book.getCard().getCardId();
 
-        if(book.getCard()==null || !bookCardId.equals(studentCardId)){
-            throw new RuntimeException(("THE BOOK IS NOT ISSUED BY STUDENT !"));
+        if( !bookCardId.equals(studentCardId)  ){
+            throw new BookException("BOOK "+bookName+" IS NOT ISSUED BY STUDENT !");
         }
 
         book.setAvailability(Availability.AVAILABLE);

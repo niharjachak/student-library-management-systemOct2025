@@ -2,6 +2,8 @@ package com.acciojob.student_library_management_system.service;
 
 import com.acciojob.student_library_management_system.entities.Book;
 import com.acciojob.student_library_management_system.enums.Availability;
+import com.acciojob.student_library_management_system.exceptions.BookAlreadyIssuedException;
+import com.acciojob.student_library_management_system.exceptions.BookNotFoundException;
 import com.acciojob.student_library_management_system.repository.IBookRepository;
 import com.acciojob.student_library_management_system.requestdtos.BookRequestDto;
 import lombok.extern.slf4j.Slf4j;
@@ -44,17 +46,15 @@ public class BookService {
         Optional<Book> opbook = bookRepository.findByBookName(bookName);
         
         if(opbook.isEmpty()){
-            return "Book with Name: "+bookName+" not Found";
+            throw new BookNotFoundException("No Book named "+bookName+" found in database!");
         }
         Book book = opbook.get();
         
         if(book.getAvailability()== Availability.ISSUED){
-            return "Book with Name: "+bookName+ "is issued and hence cannot be Deleted";
+            throw new BookAlreadyIssuedException("Book with Name: "+bookName+ "is issued and hence cannot be Deleted");
         }
-        
         bookRepository.delete(book);
         return "Book Deleted From Database Successfully";
-        
     }
 
     public List<Book> getAllBooksByAvailability(Availability availability){
@@ -63,7 +63,7 @@ public class BookService {
 
     public Book getBookByBookName(String bookName){
         return bookRepository.findByBookName(bookName).
-                orElseThrow(() ->new RuntimeException("Book with Name: "+bookName+ " not found"));
+                orElseThrow(() ->new BookNotFoundException("Book with Name: "+bookName+ " not found"));
     }
 
 }

@@ -4,6 +4,8 @@ import com.acciojob.student_library_management_system.entities.Student;
 import com.acciojob.student_library_management_system.requestdtos.StudentRequestDto;
 import com.acciojob.student_library_management_system.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,14 +19,16 @@ public class StudentController {
     StudentService studentService;
 
     @PostMapping("/createstudent")
-    public String saveStudent(@RequestBody StudentRequestDto studentDto){
+    public ResponseEntity<String> saveStudent(@RequestBody StudentRequestDto studentDto){
         UUID stdCardId = studentService.createStudent(studentDto);
-        return "Student Registration Successfull! CardId: "+stdCardId;
+        return new ResponseEntity<>("Welcome "+studentDto.getStudentName()+"! CARD ID: "+stdCardId, HttpStatus.CREATED);
+
     }
 
     @GetMapping("/getById/{studentId}")
-    public Student getStudentById(@PathVariable UUID studentId){
-        return studentService.getStudentById(studentId);
+    public ResponseEntity<Student> getStudentById(@PathVariable UUID studentId){
+         Student student= studentService.getStudentById(studentId);
+        return new ResponseEntity<>(student,HttpStatus.CREATED);
     }
 
     @DeleteMapping("/deleteById/{studentId}")

@@ -3,6 +3,7 @@ package com.acciojob.student_library_management_system.service;
 import com.acciojob.student_library_management_system.entities.Card;
 import com.acciojob.student_library_management_system.entities.Student;
 import com.acciojob.student_library_management_system.enums.CardStatus;
+import com.acciojob.student_library_management_system.exceptions.StudentNotFoundException;
 import com.acciojob.student_library_management_system.repository.IStudentRepository;
 import com.acciojob.student_library_management_system.requestdtos.StudentRequestDto;
 import lombok.extern.slf4j.Slf4j;
@@ -96,22 +97,20 @@ public class StudentService {
     // IT WILL RETURN AN EXCEPTION
     public UUID getStudentCardIDByEmail(String studEmail){
         return studentRepository.findByEmail(studEmail)
-                .orElseThrow(()-> new RuntimeException("STUDENT WITH EMAIL: "+studEmail+" NOT FOUND!" ))
+                .orElseThrow(()-> new StudentNotFoundException("STUDENT WITH EMAIL: "+studEmail+" NOT FOUND!" ))
                 .getCard()
                 .getCardId();
     }
 
 
 
-    public Student getStudentById(UUID studentId){
-        Optional<Student> optionalStudent = studentRepository.findById(studentId);
+    public Student getStudentById(UUID studentId) throws StudentNotFoundException{
 
-        if(optionalStudent.isPresent()){
-            return optionalStudent.get();
-        }
-        else{
-            throw new RuntimeException("Student with id: "+studentId+" not found!");
-        }
+        return studentRepository.findById(studentId)
+                .orElseThrow(()->(
+                        new StudentNotFoundException("Student with Id: "+studentId+" not found")
+                ));
+
     }
 
     public List<Student> getAllStudents(){
